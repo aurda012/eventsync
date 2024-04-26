@@ -56,6 +56,8 @@ export async function POST(req: Request) {
   const eventType = evt.type;
 
   if (eventType === "user.created") {
+    console.log("INSIDE WEBHOOK: USER CREATED");
+
     const { id, email_addresses, image_url, first_name, last_name, username } =
       evt.data;
 
@@ -97,6 +99,8 @@ export async function POST(req: Request) {
   }
 
   if (eventType === "user.deleted") {
+    console.log("INSIDE WEBHOOK: USER DELETED");
+
     const { id } = evt.data;
 
     const deletedUser = await deleteUser(id!);

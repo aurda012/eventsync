@@ -1,8 +1,22 @@
+"use client";
 import { Button } from "@/components/ui/button";
+import { createUser } from "@/lib/actions/user.actions";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
+  // const handleCreateUser = async () => {
+  //   const user = await createUser({
+  //     clerkId: "user_2fe95Asu0LnzLTfx7zPhlsGszqA",
+  //     email: "aurdadevelops@gmail.com",
+  //     username: "aurda",
+  //     firstName: "Alfredo",
+  //     lastName: "Dev",
+  //     photo:
+  //       "https://dashboard.clerk.com/_next/image?url=https%3A%2F%2Fimg.clerk.com%2FeyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18yZmU5NUU4S2dLbng5d0NwbGZvN0JXQVZVbUkifQ&w=1920&q=75",
+  //   });
+  //   console.log({ user });
+  // };
   return (
     <>
       <section className="bg-primary-50 bg-dotted-pattern bg-contain py-5 md:py-10">
@@ -15,7 +29,12 @@ export default function Home() {
               Create, host, and manage all your events in one place. From
               concerts to business events, EventSync has you covered.
             </p>
-            <Button size="lg" asChild className="button w-full sm:w-fit">
+            <Button
+              size="lg"
+              asChild
+              className="button w-full sm:w-fit"
+              // onClick={handleCreateUser}
+            >
               <Link href="#events">Explore Now</Link>
             </Button>
           </div>
