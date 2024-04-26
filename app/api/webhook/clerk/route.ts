@@ -56,8 +56,6 @@ export async function POST(req: Request) {
   const eventType = evt.type;
 
   if (eventType === "user.created") {
-    console.log("INSIDE WEBHOOK: USER CREATED");
-
     const { id, email_addresses, image_url, first_name, last_name, username } =
       evt.data;
 
@@ -70,24 +68,17 @@ export async function POST(req: Request) {
       photo: image_url,
     };
 
-    try {
-      const newUser = await createUser(user);
+    const newUser = await createUser(user);
 
-      if (newUser) {
-        await clerkClient.users.updateUserMetadata(id, {
-          publicMetadata: {
-            userId: newUser._id,
-          },
-        });
-      }
-
-      return NextResponse.json({ message: "OK", user: newUser });
-    } catch (error) {
-      console.error("Error creating user in webhook:", error);
-      return new Response("Error occured", {
-        status: 400,
+    if (newUser) {
+      await clerkClient.users.updateUserMetadata(id, {
+        publicMetadata: {
+          userId: newUser._id,
+        },
       });
     }
+
+    return NextResponse.json({ message: "OK", user: newUser });
   }
 
   if (eventType === "user.updated") {
@@ -100,33 +91,17 @@ export async function POST(req: Request) {
       photo: image_url,
     };
 
-    try {
-      const updatedUser = await updateUser(id, user);
+    const updatedUser = await updateUser(id, user);
 
-      return NextResponse.json({ message: "OK", user: updatedUser });
-    } catch (error) {
-      console.error("Error updating user in webhook:", error);
-      return new Response("Error occured", {
-        status: 400,
-      });
-    }
+    return NextResponse.json({ message: "OK", user: updatedUser });
   }
 
   if (eventType === "user.deleted") {
-    console.log("INSIDE WEBHOOK: USER DELETED");
-
     const { id } = evt.data;
 
-    try {
-      const deletedUser = await deleteUser(id!);
+    const deletedUser = await deleteUser(id!);
 
-      return NextResponse.json({ message: "OK", user: deletedUser });
-    } catch (error) {
-      console.error("Error deleting user in webhook:", error);
-      return new Response("Error occured", {
-        status: 400,
-      });
-    }
+    return NextResponse.json({ message: "OK", user: deletedUser });
   }
 
   return new Response("", { status: 200 });
