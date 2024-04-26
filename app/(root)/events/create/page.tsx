@@ -2,9 +2,11 @@ import EventForm from "@/components/shared/EventForm";
 import { auth } from "@clerk/nextjs";
 
 const CreateEvent = () => {
-  const { sessionClaims } = auth();
+  const { userId } = auth();
 
-  const userId = sessionClaims?.userId as string;
+  if (!userId) {
+    return null;
+  }
 
   return (
     <>
@@ -15,7 +17,7 @@ const CreateEvent = () => {
       </section>
 
       <div className="wrapper my-8">
-        <EventForm userId={userId} type="Create" />
+        <EventForm clerkId={userId} type="Create" />
       </div>
     </>
   );
