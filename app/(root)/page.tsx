@@ -1,22 +1,24 @@
-"use client";
 import { Button } from "@/components/ui/button";
-import { createUser } from "@/lib/actions/user.actions";
+import CategoryFilter from "@/components/shared/CategoryFilter";
+import Collection from "@/components/shared/Collection";
+import Search from "@/components/shared/Search";
 import Image from "next/image";
 import Link from "next/link";
+import { getAllEvents } from "@/lib/actions/event.actions";
+import { SearchParamProps } from "@/types";
 
-export default function Home() {
-  // const handleCreateUser = async () => {
-  //   const user = await createUser({
-  //     clerkId: "user_2fe95Asu0LnzLTfx7zPhlsGszqA",
-  //     email: "aurdadevelops@gmail.com",
-  //     username: "aurda",
-  //     firstName: "Alfredo",
-  //     lastName: "Dev",
-  //     photo:
-  //       "https://dashboard.clerk.com/_next/image?url=https%3A%2F%2Fimg.clerk.com%2FeyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18yZmU5NUU4S2dLbng5d0NwbGZvN0JXQVZVbUkifQ&w=1920&q=75",
-  //   });
-  //   console.log({ user });
-  // };
+export default async function Home({ searchParams }: SearchParamProps) {
+  const page = Number(searchParams?.page) || 1;
+  const searchText = (searchParams?.query as string) || "";
+  const category = (searchParams?.category as string) || "";
+
+  const events = await getAllEvents({
+    query: searchText,
+    category,
+    page,
+    limit: 6,
+  });
+
   return (
     <>
       <section className="bg-primary-50 bg-dotted-pattern bg-contain py-5 md:py-10">
@@ -29,12 +31,7 @@ export default function Home() {
               Create, host, and manage all your events in one place. From
               concerts to business events, EventSync has you covered.
             </p>
-            <Button
-              size="lg"
-              asChild
-              className="button w-full sm:w-fit"
-              // onClick={handleCreateUser}
-            >
+            <Button size="lg" asChild className="button w-full sm:w-fit">
               <Link href="#events">Explore Now</Link>
             </Button>
           </div>
@@ -55,6 +52,20 @@ export default function Home() {
         <h2 className="h2-bold">
           Trusted by <br /> Thousands of Events
         </h2>
+        <div className="flex w-full flex-col gap-5 md:flex-row">
+          <Search />
+          <CategoryFilter />
+        </div>
+
+        <Collection
+          data={events?.data}
+          emptyTitle="No Events Found"
+          emptyStateSubtext="Come back later"
+          collectionType="All_Events"
+          limit={6}
+          page={page}
+          totalPages={events?.totalPages}
+        />
       </section>
     </>
   );
